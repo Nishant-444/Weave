@@ -1,7 +1,7 @@
 # Weave - Production Multi-Tenant PDF & CSV RAG System
 
 **Version:** 1.0.0  
-**Status:** Production-Ready (Open Source)  
+**Status:** Production-Ready  
 **Tech Stack:** Python, FastAPI, uv, PostgreSQL, pgvector, React, TypeScript, Vite, Tailwind CSS, shadcn/ui, Google Gemini, Groq, Docker
 
 ![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
@@ -592,4 +592,3 @@ Repository: [Weave](https://github.com/Nishant-444/Weave)
 ## Other Documentation
 
 - **[PRD](./docs/PRD.md)** - Product Requirements Document & architectural specifications
-- **[Status Tracker](./docs/COMPLETE_STATUS.md)** - Phase-by-phase implementation verification
