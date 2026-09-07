@@ -1,11 +1,25 @@
 import io
 import logging
+import os
+import shutil
 from typing import Dict, List, Any
 import fitz  # PyMuPDF
 import pytesseract
 from PIL import Image
 
 logger = logging.getLogger("uvicorn.error")
+
+# Windows fallback: auto-detect standard Tesseract installation if not in system PATH
+if os.name == "nt" and shutil.which("tesseract") is None:
+    for candidate in [
+        r"C:\Program Files\Tesseract-OCR\tesseract.exe",
+        r"C:\Program Files (x86)\Tesseract-OCR\tesseract.exe",
+        os.path.expanduser(r"~\AppData\Local\Programs\Tesseract-OCR\tesseract.exe"),
+    ]:
+        if os.path.exists(candidate):
+            pytesseract.pytesseract.tesseract_cmd = candidate
+            logger.info(f"Configured Windows Tesseract path: {candidate}")
+            break
 
 
 class ExtractedPage:

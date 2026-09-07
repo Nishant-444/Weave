@@ -308,13 +308,24 @@ Tesseract OCR (for scanned PDF image extraction)
 ```
 
 **Install Tesseract OCR:**
-```bash
-# Ubuntu / Debian
-sudo apt-get update && sudo apt-get install -y tesseract-ocr tesseract-ocr-eng
 
-# macOS
-brew install tesseract
-```
+- **Windows (PowerShell / winget):**
+  ```powershell
+  winget install UB-Mannheim.TesseractOCR
+  # Or via Chocolatey:
+  # choco install tesseract
+  ```
+  > *Note: Weave automatically checks and detects `C:\Program Files\Tesseract-OCR\tesseract.exe` on Windows if it is not added to your system PATH.*
+
+- **Ubuntu / Debian:**
+  ```bash
+  sudo apt-get update && sudo apt-get install -y tesseract-ocr tesseract-ocr-eng
+  ```
+
+- **macOS:**
+  ```bash
+  brew install tesseract
+  ```
 
 ---
 
@@ -322,6 +333,7 @@ brew install tesseract
 
 Run the complete 3-tier stack (PostgreSQL + pgvector, Backend, Nginx Frontend) with one command:
 
+**Linux / macOS:**
 ```bash
 # Clone the repository
 git clone https://github.com/Nishant-444/Weave.git
@@ -335,6 +347,27 @@ export GROQ_API_KEY="your_groq_api_key_here" # Optional
 docker compose up --build
 ```
 
+**Windows (PowerShell):**
+```powershell
+# Clone the repository
+git clone https://github.com/Nishant-444/Weave.git
+cd Weave
+
+# Set your API keys in PowerShell
+$env:GEMINI_API_KEY="your_gemini_api_key_here"
+$env:GROQ_API_KEY="your_groq_api_key_here" # Optional
+
+# Build and start all containers
+docker compose up --build
+```
+
+**Windows (Command Prompt / CMD):**
+```cmd
+set GEMINI_API_KEY=your_gemini_api_key_here
+set GROQ_API_KEY=your_groq_api_key_here
+docker compose up --build
+```
+
 - **Frontend:** `http://localhost:5173`
 - **Backend API Docs:** `http://localhost:8000/docs`
 - **Health Check:** `http://localhost:8000/health`
@@ -345,11 +378,12 @@ docker compose up --build
 
 #### 1. Backend Setup
 
+**Linux / macOS:**
 ```bash
 cd backend
 
 # Create and activate virtual environment
-python -m venv .venv
+python3 -m venv .venv
 source .venv/bin/activate
 
 # Install dependencies (CPU-optimized PyTorch)
@@ -363,7 +397,36 @@ cp .env.example .env
 uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 ```
 
-#### 2. Frontend Setup
+**Windows (PowerShell):**
+```powershell
+cd backend
+
+# Create and activate virtual environment
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Configure environment
+copy .env.example .env
+# Edit .env with your DATABASE_URL and GEMINI_API_KEY
+
+# Start FastAPI development server
+uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+```
+
+**Windows (Command Prompt / CMD):**
+```cmd
+cd backend
+python -m venv .venv
+.\.venv\Scripts\activate.bat
+pip install -r requirements.txt
+copy .env.example .env
+uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+```
+
+#### 2. Frontend Setup (All Platforms)
 
 ```bash
 cd frontend
