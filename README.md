@@ -409,7 +409,7 @@ uv run uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
   cd backend
   python3 -m venv .venv
   source .venv/bin/activate
-  pip install -r requirements.txt
+  pip install -e .
   cp .env.example .env
   uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
   ```
@@ -419,7 +419,7 @@ uv run uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
   cd backend
   python -m venv .venv
   .\.venv\Scripts\Activate.ps1
-  pip install -r requirements.txt
+  pip install -e .
   copy .env.example .env
   uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
   ```
@@ -429,7 +429,7 @@ uv run uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
   cd backend
   python -m venv .venv
   .\.venv\Scripts\activate.bat
-  pip install -r requirements.txt
+  pip install -e .
   copy .env.example .env
   uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
   ```
@@ -543,9 +543,9 @@ Weave/
 │   │   │   └── sql_engine.py        # Text-to-SQL generation & Postgres execution
 │   │   ├── llm.py                   # Dual LLM resilience layer (Gemini -> Groq failover)
 │   │   └── main.py                  # FastAPI application entrypoint & lifespan
-│   ├── Dockerfile                   # Production backend container with Tesseract & PyTorch CPU
-│   ├── pyproject.toml
-│   ├── requirements.txt
+│   ├── Dockerfile                   # Production backend container with Tesseract & uv
+│   ├── pyproject.toml               # Project metadata & dependency definitions
+│   ├── uv.lock                      # Deterministic locked dependency graph
 │   └── .env.example
 ├── frontend/
 │   ├── src/
