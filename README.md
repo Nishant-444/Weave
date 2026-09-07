@@ -2,10 +2,11 @@
 
 **Version:** 1.0.0  
 **Status:** Production-Ready (Open Source)  
-**Tech Stack:** Python, FastAPI, PostgreSQL, pgvector, React, TypeScript, Vite, Tailwind CSS, shadcn/ui, Google Gemini, Groq, Docker
+**Tech Stack:** Python, FastAPI, uv, PostgreSQL, pgvector, React, TypeScript, Vite, Tailwind CSS, shadcn/ui, Google Gemini, Groq, Docker
 
 ![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
 ![FastAPI](https://img.shields.io/badge/FastAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white)
+![uv](https://img.shields.io/badge/uv-Astral-DE5FE9?style=for-the-badge&logo=astral&logoColor=white)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-4169E1?style=for-the-badge&logo=postgresql&logoColor=white)
 ![pgvector](https://img.shields.io/badge/pgvector-Vector_DB-blue?style=for-the-badge)
 ![React](https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=react&logoColor=black)
@@ -127,6 +128,7 @@ Built without bloated orchestration wrappers (no LangChain or LlamaIndex), Weave
 
 ![Python](https://img.shields.io/badge/Python-3776AB?style=flat-square&logo=python&logoColor=white)
 ![FastAPI](https://img.shields.io/badge/FastAPI-009688?style=flat-square&logo=fastapi&logoColor=white)
+![uv](https://img.shields.io/badge/uv-Astral-DE5FE9?style=flat-square&logo=astral&logoColor=white)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-4169E1?style=flat-square&logo=postgresql&logoColor=white)
 ![pgvector](https://img.shields.io/badge/pgvector-Vector_DB-blue?style=flat-square)
 ![React](https://img.shields.io/badge/React-61DAFB?style=flat-square&logo=react&logoColor=black)
@@ -139,6 +141,7 @@ Built without bloated orchestration wrappers (no LangChain or LlamaIndex), Weave
 | Layer | Technology | Version | Purpose |
 | :--- | :--- | :--- | :--- |
 | **Backend API** | FastAPI (Python) | `0.115.0` | Asynchronous REST & Server-Sent Events (SSE) streaming API |
+| **Package Manager** | `uv` (Astral) | `0.4+` | Blazing-fast Rust package manager & deterministic lockfile (`uv.lock`) |
 | **Database Pool** | `asyncpg` | `0.29.0` | Raw SQL connection pool with statement caching control for poolers |
 | **Database** | PostgreSQL | `14+ / 16` | Relational multi-tenant document and metadata storage |
 | **Vector Database** | `pgvector` | `0.5.0+` | HNSW cosine similarity indexing (`<=>`) for dense vectors |
@@ -279,6 +282,11 @@ GET    /                      - Root service identification endpoint
 - **Zero Embedding API Costs:** Embedding 1,000+ CSV rows or 700-page textbooks via paid APIs creates recurring latency and API costs.
 - **Lightweight & Fast:** At ~90MB, `all-MiniLM-L6-v2` runs efficiently on standard CPUs, producing high-quality 384-dimensional dense vectors in batch without GPU requirements.
 
+### Why Astral `uv` over standard `pip` / `venv`?
+- **10-100x Faster Resolution:** Built in Rust, `uv` installs dependencies and PyTorch CPU in seconds rather than minutes.
+- **Deterministic Lockfile (`uv.lock`):** Guarantees zero version drift between local dev environments and Docker production images.
+- **Native CPU PyTorch Index Mapping:** Configured in `pyproject.toml` with `[tool.uv.sources]` to explicitly pull lightweight CPU-only PyTorch wheels (~150MB instead of ~2GB CUDA binaries).
+
 ---
 
 ## Security Implementation & Guardrails
@@ -378,53 +386,53 @@ docker compose up --build
 
 #### 1. Backend Setup
 
-**Linux / macOS:**
+**Method A: Using `uv` (Recommended — Blazing Fast & Deterministic)**
+
 ```bash
 cd backend
 
-# Create and activate virtual environment
-python3 -m venv .venv
-source .venv/bin/activate
-
-# Install dependencies (CPU-optimized PyTorch)
-pip install -r requirements.txt
+# Sync dependencies from uv.lock (creates .venv and installs packages in ~2s)
+uv sync
 
 # Configure environment
-cp .env.example .env
+cp .env.example .env   # Windows: copy .env.example .env
 # Edit .env with your DATABASE_URL and GEMINI_API_KEY
 
 # Start FastAPI development server
-uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+uv run uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 ```
 
-**Windows (PowerShell):**
-```powershell
-cd backend
+**Method B: Traditional `venv` + `pip`**
 
-# Create and activate virtual environment
-python -m venv .venv
-.\.venv\Scripts\Activate.ps1
+- **Linux / macOS:**
+  ```bash
+  cd backend
+  python3 -m venv .venv
+  source .venv/bin/activate
+  pip install -r requirements.txt
+  cp .env.example .env
+  uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+  ```
 
-# Install dependencies
-pip install -r requirements.txt
+- **Windows (PowerShell):**
+  ```powershell
+  cd backend
+  python -m venv .venv
+  .\.venv\Scripts\Activate.ps1
+  pip install -r requirements.txt
+  copy .env.example .env
+  uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+  ```
 
-# Configure environment
-copy .env.example .env
-# Edit .env with your DATABASE_URL and GEMINI_API_KEY
-
-# Start FastAPI development server
-uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
-```
-
-**Windows (Command Prompt / CMD):**
-```cmd
-cd backend
-python -m venv .venv
-.\.venv\Scripts\activate.bat
-pip install -r requirements.txt
-copy .env.example .env
-uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
-```
+- **Windows (Command Prompt / CMD):**
+  ```cmd
+  cd backend
+  python -m venv .venv
+  .\.venv\Scripts\activate.bat
+  pip install -r requirements.txt
+  copy .env.example .env
+  uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+  ```
 
 #### 2. Frontend Setup (All Platforms)
 
