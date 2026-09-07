@@ -35,3 +35,6 @@ dist-ssr/
 # Large benchmarks/scratch
 test_financial_benchmark.csv
 docs/gemini-code-*.sh
+
+# Local deployment guide
+DEPLOYMENT.md
