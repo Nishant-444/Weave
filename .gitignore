@@ -1,0 +1,37 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+ENV/
+
+# Environment variables & secrets
+.env
+*.env
+!.env.example
+.env.*
+!.env.example
+
+# Testing & caches
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+
+# Node & Frontend
+node_modules/
+dist/
+dist-ssr/
+*.local
+.npm
+.DS_Store
+*.tsbuildinfo
+
+# Large benchmarks/scratch
+test_financial_benchmark.csv
+docs/gemini-code-*.sh
